@@ -1,0 +1,92 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: demo
+  components:
+    base:
+      enabled: true
+    pilot:
+      enabled: true
+      k8s:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2048Mi
+          limits:
+            cpu: 1000m
+            memory: 4096Mi
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+    egressGateways:
+    - name: istio-egressgateway
+      enabled: true
+    telemetry:
+      enabled: true
+    policy:
+      enabled: true
+    citadel:
+      enabled: true
+    nodeagent:
+      enabled: true
+    addonComponents:
+      kiali:
+        enabled: true
+      grafana:
+        enabled: true
+      prometheus:
+        enabled: true
+      tracing:
+        enabled: true
+        name: jaeger
+  values:
+    global:
+      proxy:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      defaultResources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+    pilot:
+      autoscaleEnabled: true
+      autoscaleMin: 2
+      autoscaleMax: 5
+    telemetry:
+      enabled: true
+      v1:
+        enabled: true
+      v2:
+        enabled: true
+    security:
+      selfSigned: true
+    prometheus:
+      enabled: true
+    grafana:
+      enabled: true
+      security:
+        enabled: true
+    kiali:
+      enabled: true
+      dashboard:
+        auth:
+          strategy: token
+    tracing:
+      enabled: true
+      provider: jaeger 
